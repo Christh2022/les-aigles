@@ -34,6 +34,28 @@ export default {
           950: '#451a03',
         },
       },
+      fontFamily: {
+        sans: ['Inter', 'Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      letterSpacing: {
+        tight: '-0.025em',
+      },
+      borderRadius: {
+        'xl': '12px',
+      },
+      backdropBlur: {
+        md: '12px',
+      },
+      transitionProperty: {
+        'all': 'all',
+      },
+      transitionDuration: {
+        '300': '300ms',
+      },
+      scale: {
+        '102': '1.02',
+        '95': '0.95',
+      },
     },
   },
   plugins: [],

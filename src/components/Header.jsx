@@ -38,66 +38,75 @@ const Header = () => {
   }
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="sticky top-0 z-50 backdrop-blur-md bg-white/95 shadow-sm border-b border-gray-100 transition-all duration-300">
       <nav className="container-custom">
         <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center">
+          {/* Logo - Enhanced with better spacing */}
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
               <span className="text-white font-bold text-xl">LA</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-primary-900 font-bold text-lg leading-tight">
+              <span className="text-primary-900 font-bold text-lg leading-tight tracking-tight">
                 La Famille Les Aigles
               </span>
-              <span className="text-gray-500 text-xs">
+              <span className="text-gray-500 text-xs font-medium">
                 {currentLang === 'FR' ? 'Aide Sociale Internationale' : 'International Social Aid'}
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          {/* Desktop Navigation - Premium hover effects */}
+          <div className="hidden lg:flex items-center space-x-1">
             {navigation[currentLang].map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200"
+                className="nav-link px-4 py-2 rounded-lg hover:bg-gray-50"
               >
                 {item.name}
               </Link>
             ))}
           </div>
 
-          {/* Right side buttons */}
-          <div className="flex items-center space-x-4">
-            {/* Language Selector */}
+          {/* Right side buttons - Enhanced styling */}
+          <div className="flex items-center space-x-3">
+            {/* Language Selector - Cleaner design */}
             <button
               onClick={toggleLanguage}
-              className="hidden md:flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+              className="hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 focus-custom"
               aria-label="Change language"
             >
-              <Globe className="w-5 h-5 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">{currentLang}</span>
+              <Globe className="w-5 h-5 text-primary-600" />
+              <span className="text-sm font-semibold text-gray-700">{currentLang}</span>
             </button>
 
-            {/* Donate Button - Very visible */}
+            {/* Donate Button - Premium CTA with Gold styling */}
             <Link
               to="/don"
-              className="btn-gold flex items-center space-x-2 animate-pulse hover:animate-none"
+              className="btn-gold hidden sm:flex space-x-2 group"
             >
-              <Heart className="w-5 h-5" fill="currentColor" />
-              <span className="hidden sm:inline">{donateText[currentLang]}</span>
+              <Heart className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="currentColor" />
+              <span>{donateText[currentLang]}</span>
             </Link>
 
-            {/* Mobile menu button */}
+            {/* Mobile Donate Button (Icon Only) */}
+            <Link
+              to="/don"
+              className="sm:hidden btn-gold w-12 h-12 !p-0"
+              aria-label="Donate"
+            >
+              <Heart className="w-5 h-5" fill="currentColor" />
+            </Link>
+
+            {/* Mobile menu button - Improved animation */}
             <button
               onClick={toggleMenu}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-50 transition-all duration-200 focus-custom"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
-                <X className="w-6 h-6 text-gray-700" />
+                <X className="w-6 h-6 text-gray-700 transition-transform duration-300 rotate-90" />
               ) : (
                 <Menu className="w-6 h-6 text-gray-700" />
               )}
@@ -105,34 +114,37 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t">
-            <div className="flex flex-col space-y-3">
-              {navigation[currentLang].map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-primary-600 rounded-lg transition-colors duration-200"
-                >
-                  {item.name}
-                </Link>
-              ))}
-              {/* Language selector for mobile */}
-              <button
-                onClick={() => {
-                  toggleLanguage()
-                  setIsMenuOpen(false)
-                }}
-                className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+        {/* Mobile Navigation - Enhanced with smooth animations */}
+        <div
+          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="py-4 border-t border-gray-100 space-y-1">
+            {navigation[currentLang].map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 rounded-lg transition-all duration-200 font-medium"
               >
-                <Globe className="w-5 h-5" />
-                <span>{currentLang === 'FR' ? 'English' : 'Français'}</span>
-              </button>
-            </div>
+                {item.name}
+              </Link>
+            ))}
+
+            {/* Language selector for mobile - Better styling */}
+            <button
+              onClick={() => {
+                toggleLanguage()
+                setIsMenuOpen(false)
+              }}
+              className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-all duration-200 font-medium"
+            >
+              <Globe className="w-5 h-5 text-primary-600" />
+              <span>{currentLang === 'FR' ? 'Switch to English' : 'Passer en Français'}</span>
+            </button>
           </div>
-        )}
+        </div>
       </nav>
     </header>
   )
