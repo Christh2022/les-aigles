@@ -38,6 +38,31 @@ const Hero = () => {
     },
   }
 
+  // Delayed floating variants for staggered animations
+  const floatingVariantsDelayed2s = {
+    animate: {
+      y: [0, -10, 0],
+      transition: {
+        duration: 6,
+        repeat: Infinity,
+        ease: 'easeInOut',
+        delay: 2,
+      },
+    },
+  }
+
+  const floatingVariantsDelayed4s = {
+    animate: {
+      y: [0, -10, 0],
+      transition: {
+        duration: 6,
+        repeat: Infinity,
+        ease: 'easeInOut',
+        delay: 4,
+      },
+    },
+  }
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-white">
       {/* Animated Background Elements - Radial gradient and floating orbs */}
@@ -52,15 +77,13 @@ const Hero = () => {
           className="absolute top-20 left-[10%] w-64 h-64 bg-gradient-to-br from-primary-200/30 to-primary-300/20 rounded-full blur-3xl"
         />
         <motion.div
-          variants={floatingVariants}
+          variants={floatingVariantsDelayed2s}
           animate="animate"
-          style={{ animationDelay: '2s' }}
           className="absolute bottom-20 right-[10%] w-96 h-96 bg-gradient-to-br from-gold-200/30 to-gold-300/20 rounded-full blur-3xl"
         />
         <motion.div
-          variants={floatingVariants}
+          variants={floatingVariantsDelayed4s}
           animate="animate"
-          style={{ animationDelay: '4s' }}
           className="absolute top-1/2 right-[20%] w-48 h-48 bg-gradient-to-br from-green-200/30 to-green-300/20 rounded-full blur-3xl"
         />
         

@@ -107,7 +107,7 @@ const Navbar = () => {
         className={`sticky top-0 z-50 transition-all duration-500 ease-in-out ${
           isScrolled
             ? 'bg-white/80 backdrop-blur-xl shadow-soft border-b border-gray-100/50'
-            : 'bg-transparent'
+            : 'bg-white/60 backdrop-blur-md'
         }`}
       >
         <nav className="container-custom">

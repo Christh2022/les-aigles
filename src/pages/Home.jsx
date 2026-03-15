@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   GraduationCap,
@@ -12,7 +12,6 @@ import {
   Heart,
 } from 'lucide-react'
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
 import { getFormations, getArticles, getEvenements } from '../lib/supabaseClient'
 import Hero from '../components/Hero'
 import ImpactStats from '../components/ImpactStats'

@@ -85,7 +85,7 @@ body {
       rgba(255, 255, 255, 0.3),
       transparent
     );
-    animation: shimmer 2.5s infinite;
+    animation: shimmer 2s infinite;
   }
 
   .btn-primary {
