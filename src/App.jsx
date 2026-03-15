@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
+import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import Events from './pages/Events'
@@ -8,8 +8,8 @@ import './App.css'
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-        <Header />
+      <div className="min-h-screen bg-white">
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/evenements" element={<Events />} />
