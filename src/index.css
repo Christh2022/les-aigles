@@ -7,9 +7,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light;
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #ffffff;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,49 +17,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   display: flex;
+  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
 
 #root {
   width: 100%;
+  margin: 0 auto;
+  text-align: center;
 }
 
-@layer components {
-  .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200;
-  }
+/* Badge styles for country indicators */
+.badge-france {
+  @apply bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-semibold;
+}
 
-  .btn-gold {
-    @apply bg-gold-500 hover:bg-gold-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl;
-  }
-
-  .card {
-    @apply bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden;
-  }
-
-  .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
-  }
-
-  .badge-france {
-    @apply bg-blue-100 text-blue-800;
-  }
-
-  .badge-congo {
-    @apply bg-green-100 text-green-800;
-  }
-
-  .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
+.badge-congo {
+  @apply bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold;
 }

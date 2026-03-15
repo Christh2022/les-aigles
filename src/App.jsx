@@ -1,30 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Home from './pages/Home'
-import Events from './pages/Events'
+import { useState } from 'react'
+import './App.css'
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/evenements" element={<Events />} />
-            {/* TODO: Ajouter les autres routes */}
-            <Route path="/missions" element={<div className="container-custom py-20 text-center"><h1 className="text-3xl font-bold">Page Missions - En construction</h1></div>} />
-            <Route path="/formations" element={<div className="container-custom py-20 text-center"><h1 className="text-3xl font-bold">Page Formations - En construction</h1></div>} />
-            <Route path="/blog" element={<div className="container-custom py-20 text-center"><h1 className="text-3xl font-bold">Page Blog - En construction</h1></div>} />
-            <Route path="/contact" element={<div className="container-custom py-20 text-center"><h1 className="text-3xl font-bold">Page Contact - En construction</h1></div>} />
-            <Route path="/don" element={<div className="container-custom py-20 text-center"><h1 className="text-3xl font-bold">Page Dons - En construction</h1></div>} />
-            <Route path="/admin" element={<div className="container-custom py-20 text-center"><h1 className="text-3xl font-bold">Dashboard Admin - En construction</h1></div>} />
-          </Routes>
-        </main>
-        <Footer />
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <div className="container mx-auto px-4 py-16">
+        <h1 className="text-4xl font-bold text-primary-600 mb-4">
+          Les Aigles
+        </h1>
+        <p className="text-xl text-gray-700 mb-8">
+          Association France-Congo pour l'aide sociale internationale
+        </p>
+        <div className="flex gap-4 justify-center mb-8">
+          <span className="badge-france">France</span>
+          <span className="badge-congo">Congo</span>
+        </div>
+        <div className="card p-8 bg-white rounded-lg shadow-lg max-w-md mx-auto">
+          <button
+            className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded transition-colors"
+            onClick={() => setCount((count) => count + 1)}
+          >
+            count is {count}
+          </button>
+          <p className="mt-4 text-gray-600">
+            Plateforme de gestion pour l'association Les Aigles
+          </p>
+        </div>
       </div>
-    </Router>
+    </div>
   )
 }
 
