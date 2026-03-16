@@ -5,7 +5,6 @@ import {
   Users,
   MapPin,
   ArrowRight,
-  BookOpen,
   Home as HomeIcon,
   Utensils,
   Calendar,
@@ -13,8 +12,11 @@ import {
 } from 'lucide-react'
 import { motion, useInView } from 'framer-motion'
 import { getFormations, getArticles, getEvenements } from '../lib/supabaseClient'
+import { supabase } from '../lib/supabaseClient'
 import Hero from '../components/Hero'
 import ImpactStats from '../components/ImpactStats'
+
+const DONATION_URL = 'https://www.paypal.me/Lafamillelesaigles?locale.x=fr_FR'
 
 const Home = () => {
   const [formations, setFormations] = useState([])
@@ -43,11 +45,40 @@ const Home = () => {
     }
 
     fetchData()
+
+    const articlesChannel = supabase
+      .channel('home-articles-live')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'articles' },
+        () => {
+          fetchData()
+        }
+      )
+      .subscribe()
+
+    const eventsChannel = supabase
+      .channel('home-evenements-live')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'evenements' },
+        () => {
+          fetchData()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(articlesChannel)
+      supabase.removeChannel(eventsChannel)
+    }
   }, [])
 
   const filteredFormations = selectedCountry === 'ALL'
     ? formations
     : formations.filter(f => f.pays_concerne === selectedCountry)
+
+  const isVideoUrl = (url = '') => /\.(mp4|webm|mov)(\?.*)?$/i.test(url)
 
   // Animation variants
   const containerVariants = {
@@ -178,12 +209,6 @@ const Home = () => {
                     <HomeIcon className="w-5 h-5 text-green-600" />
                   </div>
                   <span className="text-gray-700 leading-relaxed">Gestion de l&apos;orphelinat</span>
-                </li>
-                <li className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <BookOpen className="w-5 h-5 text-green-600" />
-                  </div>
-                  <span className="text-gray-700 leading-relaxed">Direction de l&apos;école primaire</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -374,11 +399,21 @@ const Home = () => {
                     >
                       <div className="flex items-start space-x-4">
                         {article.image_url && (
-                          <img
-                            src={article.image_url}
-                            alt={article.titre}
-                            className="w-24 h-24 object-cover rounded-2xl flex-shrink-0 group-hover:scale-105 transition-transform duration-500"
-                          />
+                          isVideoUrl(article.image_url) ? (
+                            <video
+                              src={article.image_url}
+                              controls
+                              playsInline
+                              preload="metadata"
+                              className="w-24 h-24 object-contain rounded-2xl flex-shrink-0 bg-black/5"
+                            />
+                          ) : (
+                            <img
+                              src={article.image_url}
+                              alt={article.titre}
+                              className="w-24 h-24 object-contain rounded-2xl flex-shrink-0 bg-black/5"
+                            />
+                          )
                         )}
                         <div className="flex-1">
                           <h3 className="font-bold text-gray-900 mb-2 tracking-tight group-hover:text-primary-600 transition-colors duration-300">{article.titre}</h3>
@@ -455,8 +490,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section - Premium Gold Design with Glassmorphism */}
-      <section className="py-24 bg-gradient-to-br from-gold-500 via-gold-600 to-amber-600 text-white relative overflow-hidden">
+      {/* CTA Section - Premium Blue Design with Glassmorphism */}
+      <section className="py-24 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0">
           <div className="absolute top-10 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" />
@@ -470,25 +505,26 @@ const Home = () => {
           transition={{ duration: 0.8 }}
           className="container-custom text-center relative z-10"
         >
-          <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-            <Heart className="w-10 h-10" fill="currentColor" />
-          </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight">
             Votre don change des vies
           </h2>
           <p className="text-xl md:text-2xl mb-12 max-w-2xl mx-auto leading-relaxed opacity-90">
             Soutenez nos actions en France et au Congo. Choisissez le projet que vous souhaitez financer.
           </p>
-          <Link to="/don">
+          <a href={DONATION_URL} target="_blank" rel="noreferrer">
             <motion.button
               whileHover={{ scale: 1.05, y: -4 }}
               whileTap={{ scale: 0.98 }}
-              className="bg-white text-gold-600 hover:bg-gray-50 font-bold py-5 px-12 rounded-full transition-all duration-500 inline-flex items-center text-lg shadow-2xl"
+              className="bg-white text-primary-600 hover:bg-gray-50 font-bold py-5 px-12 rounded-full transition-all duration-500 inline-flex items-center text-lg shadow-2xl"
             >
               Faire un Don Maintenant
               <ArrowRight className="w-6 h-6 ml-3" />
             </motion.button>
-          </Link>
+          </a>
+          <p className="mt-6 text-sm md:text-base max-w-3xl mx-auto opacity-85">
+            Chaque contribution finance des actions concretes : accompagnement social, aide alimentaire,
+            formations de jeunes et projets communautaires sur le terrain.
+          </p>
         </motion.div>
       </section>
     </div>

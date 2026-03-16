@@ -29,6 +29,21 @@ export const getArticles = async (langue = null) => {
 }
 
 /**
+ * Recupere un article par son id
+ * @param {string} id - Identifiant de l'article
+ */
+export const getArticleById = async (id) => {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+/**
  * Récupère les formations avec filtrage optionnel par pays
  * @param {string} pays - Pays concerné
  */
@@ -43,6 +58,21 @@ export const getFormations = async (pays = null) => {
   }
 
   const { data, error } = await query
+  if (error) throw error
+  return data
+}
+
+/**
+ * Recupere une formation par son id
+ * @param {string} id - Identifiant de la formation
+ */
+export const getFormationById = async (id) => {
+  const { data, error } = await supabase
+    .from('formations')
+    .select('*')
+    .eq('id', id)
+    .single()
+
   if (error) throw error
   return data
 }
@@ -74,6 +104,20 @@ export const createDon = async (donData) => {
   const { data, error } = await supabase
     .from('dons')
     .insert([donData])
+    .select()
+
+  if (error) throw error
+  return data
+}
+
+/**
+ * Enregistre une inscription a une formation
+ * @param {Object} inscriptionData - Donnees d'inscription
+ */
+export const createFormationInscription = async (inscriptionData) => {
+  const { data, error } = await supabase
+    .from('inscriptions_formations')
+    .insert([inscriptionData])
     .select()
 
   if (error) throw error

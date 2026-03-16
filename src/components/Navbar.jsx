@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Globe, Menu, X, Heart, ChevronRight } from 'lucide-react'
+import { Menu, X, Heart, ChevronRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import logo from '../assets/logo.png'
+import { supabase } from '../lib/supabaseClient'
+
+const DONATION_URL = 'https://www.paypal.me/Lafamillelesaigles?locale.x=fr_FR'
+const ADMIN_PATH = '/acces-prive-lfae-7mQ2x9Kp4Vn8Rt3Yh6Zs1Jd5Wc0bL2t9/admin'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [currentLang, setCurrentLang] = useState('FR')
   const [isScrolled, setIsScrolled] = useState(false)
+  const [hasAdminAccess, setHasAdminAccess] = useState(false)
   const location = useLocation()
 
   // Handle scroll for glassmorphism effect
@@ -35,35 +40,36 @@ const Navbar = () => {
     }
   }, [isMenuOpen])
 
+  useEffect(() => {
+    const initSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      setHasAdminAccess(Boolean(data.session))
+    }
+
+    initSession()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setHasAdminAccess(Boolean(nextSession))
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [])
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
-  const toggleLanguage = () => {
-    setCurrentLang(currentLang === 'FR' ? 'EN' : 'FR')
-  }
+  const navigation = [
+    { name: 'Accueil', href: '/' },
+    { name: 'Nos Missions', href: '/missions' },
+    { name: 'Formations', href: '/formations' },
+    { name: 'Événements', href: '/evenements' },
+    { name: 'Blog', href: '/blog' },
+    ...(hasAdminAccess ? [{ name: 'Admin', href: ADMIN_PATH }] : []),
+    { name: 'Contact', href: '/contact' },
+  ]
 
-  const navigation = {
-    FR: [
-      { name: 'Accueil', href: '/' },
-      { name: 'Nos Missions', href: '/missions' },
-      { name: 'Formations', href: '/formations' },
-      { name: 'Événements', href: '/evenements' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Contact', href: '/contact' },
-    ],
-    EN: [
-      { name: 'Home', href: '/' },
-      { name: 'Our Missions', href: '/missions' },
-      { name: 'Training', href: '/formations' },
-      { name: 'Events', href: '/evenements' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Contact', href: '/contact' },
-    ],
-  }
-
-  const donateText = {
-    FR: 'Faire un Don',
-    EN: 'Donate',
-  }
+  const donateText = 'Faire un Don'
 
   // Animation variants
   const menuVariants = {
@@ -112,28 +118,30 @@ const Navbar = () => {
       >
         <nav className="container-custom">
           <div className="flex justify-between items-center h-20">
-            {/* Logo - Enhanced with gradient and hover effects */}
             <Link to="/" className="flex items-center space-x-3 group">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-12 h-12 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-800 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/20"
+                className="w-12 h-12 rounded-2xl overflow-hidden bg-white shadow-lg shadow-primary-500/20 ring-1 ring-primary-100"
               >
-                <span className="text-white font-extrabold text-xl">LA</span>
+                <img
+                  src={logo}
+                  alt="Logo La Famille Les Aigles"
+                  className="w-full h-full object-cover"
+                />
               </motion.div>
               <div className="flex flex-col">
                 <span className="text-primary-900 font-bold text-lg leading-tight tracking-tight">
                   La Famille Les Aigles
                 </span>
                 <span className="text-slate-400 text-xs font-medium tracking-wide">
-                  {currentLang === 'FR' ? 'Aide Sociale Internationale' : 'International Social Aid'}
+                  Aide Sociale Internationale
                 </span>
               </div>
             </Link>
 
-            {/* Desktop Navigation - Premium hover effects */}
             <div className="hidden lg:flex items-center space-x-1">
-              {navigation[currentLang].map((item) => (
+              {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
@@ -154,34 +162,19 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* Right side buttons - Enhanced styling */}
             <div className="flex items-center space-x-3">
-              {/* Language Selector - Cleaner design */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleLanguage}
-                className="hidden md:flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-300 focus-custom"
-                aria-label="Change language"
-              >
-                <Globe className="w-4 h-4 text-primary-600" />
-                <span className="text-sm font-semibold text-gray-700">{currentLang}</span>
-              </motion.button>
-
-              {/* Donate Button - Premium CTA with shimmer effect */}
-              <Link to="/don">
+              <a href={DONATION_URL} target="_blank" rel="noreferrer">
                 <motion.div
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="btn-gold hidden sm:flex space-x-2"
+                  className="btn-gold hidden sm:flex items-center space-x-1.5 !px-5 !py-2.5 text-xs"
                 >
-                  <Heart className="w-5 h-5" fill="currentColor" />
-                  <span>{donateText[currentLang]}</span>
+                  <Heart className="w-4 h-4" fill="currentColor" />
+                  <span>{donateText}</span>
                 </motion.div>
-              </Link>
+              </a>
 
-              {/* Mobile Donate Button (Icon Only) */}
-              <Link to="/don" className="sm:hidden">
+              <a href={DONATION_URL} target="_blank" rel="noreferrer" className="sm:hidden">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -190,9 +183,8 @@ const Navbar = () => {
                 >
                   <Heart className="w-5 h-5" fill="currentColor" />
                 </motion.div>
-              </Link>
+              </a>
 
-              {/* Mobile menu button - Improved animation */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -229,7 +221,6 @@ const Navbar = () => {
         </nav>
       </header>
 
-      {/* Full-screen Mobile Menu Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -240,9 +231,8 @@ const Navbar = () => {
             className="fixed inset-0 z-40 bg-white/98 backdrop-blur-2xl lg:hidden"
           >
             <div className="flex flex-col h-full pt-24 pb-8 px-6">
-              {/* Navigation Links */}
               <nav className="flex-1 flex flex-col justify-center space-y-2">
-                {navigation[currentLang].map((item, i) => (
+                {navigation.map((item, i) => (
                   <motion.div
                     key={item.name}
                     custom={i}
@@ -266,47 +256,25 @@ const Navbar = () => {
                     </Link>
                   </motion.div>
                 ))}
-
-                {/* Language switcher in mobile */}
-                <motion.div
-                  custom={navigation[currentLang].length}
-                  variants={menuItemVariants}
-                  initial="closed"
-                  animate="open"
-                >
-                  <button
-                    onClick={() => {
-                      toggleLanguage()
-                    }}
-                    className="w-full flex items-center justify-between px-6 py-5 rounded-2xl text-xl font-medium text-gray-600 hover:bg-gray-50 transition-all duration-300"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <Globe className="w-6 h-6 text-primary-600" />
-                      <span>{currentLang === 'FR' ? 'Switch to English' : 'Passer en Français'}</span>
-                    </div>
-                    <span className="text-sm font-bold text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
-                      {currentLang}
-                    </span>
-                  </button>
-                </motion.div>
               </nav>
 
-              {/* Bottom CTA */}
               <motion.div
-                custom={navigation[currentLang].length + 1}
+                custom={navigation.length + 1}
                 variants={menuItemVariants}
                 initial="closed"
                 animate="open"
                 className="mt-8"
               >
-                <Link
-                  to="/don"
+                <a
+                  href={DONATION_URL}
+                  target="_blank"
+                  rel="noreferrer"
                   onClick={() => setIsMenuOpen(false)}
-                  className="btn-gold w-full text-lg py-5 justify-center"
+                  className="btn-gold w-full text-base py-4 justify-center"
                 >
-                  <Heart className="w-6 h-6 mr-3" fill="currentColor" />
-                  {donateText[currentLang]}
-                </Link>
+                  <Heart className="w-5 h-5 mr-2" fill="currentColor" />
+                  {donateText}
+                </a>
               </motion.div>
             </div>
           </motion.div>

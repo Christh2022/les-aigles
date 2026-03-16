@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Facebook, Twitter, Instagram, Mail, MapPin, Phone, FileText } from 'lucide-react'
 
+const DONATION_URL = 'https://www.paypal.me/Lafamillelesaigles?locale.x=fr_FR'
+
 const Footer = () => {
   const currentYear = new Date().getFullYear()
 
@@ -71,9 +73,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/don" className="hover:text-primary-400 transition-colors">
+                <a href={DONATION_URL} target="_blank" rel="noreferrer" className="hover:text-primary-400 transition-colors">
                   Faire un Don
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -108,7 +110,7 @@ const Footer = () => {
           {/* Transparence & Gouvernance */}
           <div>
             <h3 className="text-white font-bold text-lg mb-4 flex items-center space-x-2">
-              <FileText className="w-5 h-5 text-gold-400" />
+              <FileText className="w-5 h-5 text-primary-400" />
               <span>Transparence & Gouvernance</span>
             </h3>
             <div className="text-sm space-y-2">

@@ -93,6 +93,7 @@ INSERT INTO articles (titre, contenu, langue) VALUES
 INSERT INTO formations (titre, description, niveau, pays_concerne) VALUES
 ('Formation Numérique pour Jeunes', 'Initiation aux outils informatiques et à la programmation. Programme de 3 mois incluant Word, Excel, bases de la programmation web.', 'Débutant', 'France'),
 ('Alphabétisation et Soutien Scolaire', 'Programme d''aide aux devoirs et d''alphabétisation pour enfants et adultes. Sessions quotidiennes avec suivi personnalisé.', 'Débutant', 'Congo'),
+('Alphabétisation et Soutien Scolaire', 'Programme d''aide aux devoirs et d''alphabétisation pour enfants et adultes. Sessions hebdomadaires de soutien scolaire en France avec suivi personnalisé.', 'Débutant', 'France'),
 ('Formation Entrepreneuriat Social', 'Accompagnement des jeunes entrepreneurs dans le développement de projets à impact social. Mentorat et formation business.', 'Intermédiaire', 'France'),
 ('Couture et Artisanat', 'Formation professionnelle en couture et artisanat traditionnel congolais. Certification à la fin du programme.', 'Débutant', 'Congo');
 

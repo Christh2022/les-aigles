@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
-import { Heart, ArrowRight, Globe, Sparkles } from 'lucide-react'
+import { Heart, ArrowRight, Globe } from 'lucide-react'
 import { motion } from 'framer-motion'
+
+const DONATION_URL = 'https://www.paypal.me/Lafamillelesaigles?locale.x=fr_FR'
 
 const Hero = () => {
   // Animation variants
@@ -79,7 +81,7 @@ const Hero = () => {
         <motion.div
           variants={floatingVariantsDelayed2s}
           animate="animate"
-          className="absolute bottom-20 right-[10%] w-96 h-96 bg-gradient-to-br from-gold-200/30 to-gold-300/20 rounded-full blur-3xl"
+          className="absolute bottom-20 right-[10%] w-96 h-96 bg-gradient-to-br from-primary-200/30 to-primary-300/20 rounded-full blur-3xl"
         />
         <motion.div
           variants={floatingVariantsDelayed4s}
@@ -112,7 +114,6 @@ const Hero = () => {
               <span className="text-sm font-semibold text-gray-700 tracking-wide">
                 Aide Sociale Internationale
               </span>
-              <Sparkles className="w-4 h-4 text-gold-500" />
             </div>
           </motion.div>
 
@@ -124,7 +125,7 @@ const Hero = () => {
             De la France au Congo,
             <br />
             <span className="relative inline-block">
-              <span className="bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700 bg-clip-text text-transparent">
                 et demain vers le monde
               </span>
               {/* Underline decoration */}
@@ -138,7 +139,7 @@ const Hero = () => {
               >
                 <motion.path
                   d="M2 10C50 4 150 4 298 10"
-                  stroke="url(#gold-gradient)"
+                  stroke="url(#primary-gradient)"
                   strokeWidth="3"
                   strokeLinecap="round"
                   initial={{ pathLength: 0 }}
@@ -146,10 +147,10 @@ const Hero = () => {
                   transition={{ duration: 1.5, delay: 1, ease: 'easeOut' }}
                 />
                 <defs>
-                  <linearGradient id="gold-gradient" x1="0" y1="0" x2="300" y2="0">
-                    <stop offset="0%" stopColor="#f59e0b" />
-                    <stop offset="50%" stopColor="#fbbf24" />
-                    <stop offset="100%" stopColor="#f59e0b" />
+                  <linearGradient id="primary-gradient" x1="0" y1="0" x2="300" y2="0">
+                    <stop offset="0%" stopColor="#1d4ed8" />
+                    <stop offset="50%" stopColor="#3b82f6" />
+                    <stop offset="100%" stopColor="#1d4ed8" />
                   </linearGradient>
                 </defs>
               </motion.svg>
@@ -162,7 +163,7 @@ const Hero = () => {
             className="text-xl md:text-2xl mb-12 text-slate-500 max-w-3xl mx-auto leading-relaxed font-normal"
           >
             L&apos;association La Famille Les Aigles œuvre pour l&apos;éducation, 
-            la formation et l&apos;insertion des jeunes en France et en Afrique.
+            la formation, l&apos;insertion des jeunes en France et en Afrique, et l&apos;aide aux plus démunis.
           </motion.p>
 
           {/* CTA Buttons - duration-500 ease-in-out transitions */}
@@ -170,7 +171,7 @@ const Hero = () => {
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <Link to="/don">
+            <a href={DONATION_URL} target="_blank" rel="noreferrer">
               <motion.button
                 whileHover={{ scale: 1.03, y: -3 }}
                 whileTap={{ scale: 0.97 }}
@@ -179,7 +180,7 @@ const Hero = () => {
                 <Heart className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform duration-500" fill="currentColor" />
                 Faire un Don
               </motion.button>
-            </Link>
+            </a>
             
             <Link to="/missions">
               <motion.button
@@ -224,8 +225,8 @@ const Hero = () => {
               <div className="w-px h-10 bg-gray-200 hidden md:block" />
               
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-gold-50 flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-gold-600" />
+                <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
+                  <Heart className="w-5 h-5 text-primary-600" />
                 </div>
                 <div className="text-left">
                   <p className="text-sm font-semibold text-gray-900">100%</p>

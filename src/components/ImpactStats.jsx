@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
-import { Users, GraduationCap, Home, Heart, Utensils, Globe2 } from 'lucide-react'
+import { Users, Heart, Globe2, Handshake } from 'lucide-react'
 import { motion, useInView, animate } from 'framer-motion'
 
+const DONATION_URL = 'https://www.paypal.me/Lafamillelesaigles?locale.x=fr_FR'
+
 // Animated counter component
-const AnimatedCounter = ({ value, suffix = '', duration = 2 }) => {
+const AnimatedCounter = ({ value, suffix = '', duration = 2.5 }) => {
   const [displayValue, setDisplayValue] = useState(0)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
@@ -20,7 +22,7 @@ const AnimatedCounter = ({ value, suffix = '', duration = 2 }) => {
   }, [isInView, value, duration])
 
   return (
-    <span ref={ref} className="stat-number">
+    <span ref={ref} className="font-black text-xl md:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700">
       {displayValue.toLocaleString('fr-FR')}{suffix}
     </span>
   )
@@ -58,30 +60,12 @@ const ImpactStats = () => {
   const stats = [
     {
       icon: Users,
-      value: 50,
+      value: 2,
       suffix: '',
       label: 'Enfants accueillis',
       description: 'À l\'orphelinat',
-      color: 'primary',
+      color: 'blue-1',
       gridClass: 'col-span-1',
-    },
-    {
-      icon: GraduationCap,
-      value: 120,
-      suffix: '',
-      label: 'Élèves inscrits',
-      description: 'École primaire',
-      color: 'green',
-      gridClass: 'col-span-1',
-    },
-    {
-      icon: Home,
-      value: 2,
-      suffix: '',
-      label: 'Structures gérées',
-      description: 'Orphelinat & École',
-      color: 'gold',
-      gridClass: 'col-span-1 md:col-span-2 lg:col-span-1',
     },
     {
       icon: Heart,
@@ -89,16 +73,7 @@ const ImpactStats = () => {
       suffix: '%',
       label: 'Des dons',
       description: 'Utilisés sur le terrain',
-      color: 'rose',
-      gridClass: 'col-span-1',
-    },
-    {
-      icon: Utensils,
-      value: 500,
-      suffix: '+',
-      label: 'Repas servis',
-      description: 'Chaque mois',
-      color: 'amber',
+      color: 'blue-3',
       gridClass: 'col-span-1',
     },
     {
@@ -107,86 +82,123 @@ const ImpactStats = () => {
       suffix: '',
       label: 'Pays d\'action',
       description: 'France & Congo',
-      color: 'indigo',
+      color: 'blue-4',
+      gridClass: 'col-span-1',
+    },
+    {
+      icon: Handshake,
+      value: 0,
+      suffix: '',
+      label: 'Partenaires engagés',
+      description: 'À nos côtés',
+      color: 'blue-2',
       gridClass: 'col-span-1',
     },
   ]
 
   const colorClasses = {
-    primary: {
-      bg: 'bg-primary-50',
+    'blue-1': {
+      bg: 'bg-blue-50',
       icon: 'text-primary-600',
       iconBg: 'bg-primary-100',
       gradient: 'from-primary-500 to-primary-700',
     },
-    green: {
-      bg: 'bg-green-50',
-      icon: 'text-green-600',
-      iconBg: 'bg-green-100',
-      gradient: 'from-green-500 to-green-700',
+    'blue-2': {
+      bg: 'bg-blue-50',
+      icon: 'text-primary-600',
+      iconBg: 'bg-primary-100',
+      gradient: 'from-primary-600 to-primary-800',
     },
-    gold: {
-      bg: 'bg-gold-50',
-      icon: 'text-gold-600',
-      iconBg: 'bg-gold-100',
-      gradient: 'from-gold-500 to-gold-700',
+    'gold-1': {
+      bg: 'bg-blue-50',
+      icon: 'text-primary-600',
+      iconBg: 'bg-primary-100',
+      gradient: 'from-primary-600 to-primary-800',
     },
-    rose: {
-      bg: 'bg-rose-50',
-      icon: 'text-rose-600',
-      iconBg: 'bg-rose-100',
-      gradient: 'from-rose-500 to-rose-700',
+    'blue-3': {
+      bg: 'bg-blue-50',
+      icon: 'text-primary-600',
+      iconBg: 'bg-primary-100',
+      gradient: 'from-primary-500 to-primary-700',
     },
-    amber: {
-      bg: 'bg-amber-50',
-      icon: 'text-amber-600',
-      iconBg: 'bg-amber-100',
-      gradient: 'from-amber-500 to-amber-700',
+    'gold-2': {
+      bg: 'bg-blue-50',
+      icon: 'text-primary-600',
+      iconBg: 'bg-primary-100',
+      gradient: 'from-primary-600 to-primary-700',
     },
-    indigo: {
-      bg: 'bg-indigo-50',
-      icon: 'text-indigo-600',
-      iconBg: 'bg-indigo-100',
-      gradient: 'from-indigo-500 to-indigo-700',
+    'blue-4': {
+      bg: 'bg-blue-50',
+      icon: 'text-primary-600',
+      iconBg: 'bg-primary-100',
+      gradient: 'from-primary-600 to-primary-800',
     },
   }
 
   return (
-    <section className="py-24 bg-slate-50 relative overflow-hidden">
-      {/* Background decoration */}
+    <section className="py-32 bg-gradient-to-b from-white via-slate-50/50 to-white relative overflow-hidden">
+      {/* Premium background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-100/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gold-100/30 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 right-1/3 w-96 h-96 bg-primary-400/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-primary-300/10 rounded-full blur-3xl" />
+        </div>
       </div>
 
       <div className="container-custom relative z-10" ref={containerRef}>
-        {/* Section Header */}
+        {/* Premium Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          className="text-center mb-20"
         >
-          <span className="inline-flex items-center space-x-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-            <span>🇨🇬</span>
-            <span>Notre Impact au Congo</span>
-          </span>
-          <h2 className="heading-section mb-6">
-            Des chiffres qui parlent
-          </h2>
-          <p className="text-subtitle max-w-2xl mx-auto">
-            Grâce à votre générosité, nous changeons des vies chaque jour à Kinshasa
-          </p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="inline-flex items-center space-x-3 bg-white/50 backdrop-blur-xl border border-white/20 shadow-lg px-6 py-3 rounded-full mb-8 hover:bg-white/60 transition-all"
+          >
+            <span className="text-sm">🇨🇬</span>
+            <span className="font-semibold text-xs bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-600">Notre Impact au Congo</span>
+          </motion.div>
+          
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-2xl md:text-3xl font-black mb-6 text-gray-900 leading-tight"
+          >
+            Des chiffres qui <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700">changent des vies</span>
+          </motion.h2>
+          
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mb-2"
+          >
+            Grâce à votre générosité, chaque jour nous créons un impact réel et mesurable à Kinshasa. De l'aide alimentaire à l'éducation, chaque action compte pour transformer les vies.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-xs text-gray-500 max-w-2xl mx-auto"
+          >
+            Soutenez notre mission humanitaire auprès des enfants et familles en difficulté
+          </motion.p>
         </motion.div>
 
-        {/* Bento Grid Layout */}
+        {/* Modern Bento Grid Layout */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 max-w-6xl mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 w-full mb-12"
         >
-          {stats.map((stat, index) => {
+          {stats.map((stat) => {
             const Icon = stat.icon
             const colors = colorClasses[stat.color]
             
@@ -194,135 +206,101 @@ const ImpactStats = () => {
               <motion.div
                 key={stat.label}
                 variants={itemVariants}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className={`${stat.gridClass} impact-card group cursor-pointer`}
+                whileHover={{ 
+                  y: -12, 
+                  scale: 1.05,
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                }}
+                whileTap={{ scale: 0.98 }}
+                className={`${stat.gridClass} relative group cursor-pointer`}
               >
-                {/* Icon */}
-                <div className={`w-14 h-14 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
-                  <Icon className={`w-7 h-7 ${colors.icon}`} />
+                {/* Glassmorphism Card */}
+                <div className="h-full bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden">
+                  {/* Gradient background on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${colors.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                  
+                  {/* Icon with glow */}
+                  <motion.div
+                    whileHover={{ scale: 1.15, rotate: 10 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`w-16 h-16 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:shadow-xl transition-all duration-500 relative`}
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${colors.gradient} opacity-0 group-hover:opacity-20 rounded-2xl transition-opacity duration-500`} />
+                    <Icon className={`w-8 h-8 ${colors.icon} relative z-10`} />
+                  </motion.div>
+
+                  {/* Counter with gradient */}
+                  <div className="mb-4">
+                    <AnimatedCounter value={stat.value} suffix={stat.suffix} duration={2.5} />
+                  </div>
+
+                  {/* Label */}
+                  <h3 className="text-sm font-bold text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary-600 group-hover:to-primary-700 transition-all duration-300">
+                    {stat.label}
+                  </h3>
+
+                  <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+                    {stat.description}
+                  </p>
+
+                  {/* Animated bottom accent */}
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className={`h-1.5 bg-gradient-to-r ${colors.gradient} rounded-full w-full group-hover:h-2 transition-all duration-300 origin-left`}
+                  />
                 </div>
-
-                {/* Animated Number */}
-                <div className="mb-3">
-                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                </div>
-
-                {/* Label */}
-                <h3 className="text-lg font-bold text-gray-900 mb-1 tracking-tight">
-                  {stat.label}
-                </h3>
-
-                {/* Description */}
-                <p className="text-sm text-slate-500">
-                  {stat.description}
-                </p>
-
-                {/* Hover gradient line */}
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${colors.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left rounded-b-3xl`} />
               </motion.div>
             )
           })}
         </motion.div>
 
-        {/* Featured Stats - Large Bento Cards */}
+        {/* Premium CTA Section */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          className="grid md:grid-cols-2 gap-6 mt-8 max-w-4xl mx-auto"
-        >
-          {/* Orphanage Card */}
-          <motion.div
-            variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bento-card p-8 bg-gradient-to-br from-green-50 to-green-100/50 border border-green-100"
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20">
-                    <Home className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">L&apos;Orphelinat</h3>
-                    <p className="text-sm text-green-600 font-medium">Kinshasa, Congo</p>
-                  </div>
-                </div>
-                <ul className="space-y-3">
-                  <li className="flex items-center space-x-3 text-gray-700">
-                    <span className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span>Hébergement sécurisé 24h/24</span>
-                  </li>
-                  <li className="flex items-center space-x-3 text-gray-700">
-                    <span className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span>3 repas nutritifs par jour</span>
-                  </li>
-                  <li className="flex items-center space-x-3 text-gray-700">
-                    <span className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span>Suivi médical régulier</span>
-                  </li>
-                </ul>
-              </div>
-              <span className="text-6xl font-extrabold text-green-200/60">50</span>
-            </div>
-          </motion.div>
-
-          {/* School Card */}
-          <motion.div
-            variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bento-card p-8 bg-gradient-to-br from-primary-50 to-primary-100/50 border border-primary-100"
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/20">
-                    <GraduationCap className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">L&apos;École Primaire</h3>
-                    <p className="text-sm text-primary-600 font-medium">CP à CM2</p>
-                  </div>
-                </div>
-                <ul className="space-y-3">
-                  <li className="flex items-center space-x-3 text-gray-700">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    <span>Programme éducatif complet</span>
-                  </li>
-                  <li className="flex items-center space-x-3 text-gray-700">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    <span>6 enseignants qualifiés</span>
-                  </li>
-                  <li className="flex items-center space-x-3 text-gray-700">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    <span>Fournitures scolaires fournies</span>
-                  </li>
-                </ul>
-              </div>
-              <span className="text-6xl font-extrabold text-primary-200/60">120</span>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-16"
+          transition={{ duration: 0.8, delay: 1 }}
+          className="text-center mt-24 pt-12 border-t border-white/30 backdrop-blur-sm"
         >
-          <p className="text-slate-500 mb-6">
-            Chaque don compte pour faire grandir ces chiffres
-          </p>
-          <motion.a
-            href="/don"
-            whileHover={{ scale: 1.03, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className="btn-gold inline-flex items-center text-lg"
+          <motion.p
+            className="text-lg text-gray-700 mb-8 font-medium"
+            whileHover={{ scale: 1.02 }}
           >
-            <Heart className="w-5 h-5 mr-2" fill="currentColor" />
-            Contribuer à notre mission
-          </motion.a>
+            <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">Chaque don compte</span>
+            <br />
+            pour faire grandir ces chiffres et transformer des vies
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 1.2 }}
+          >
+            <motion.a
+              href={DONATION_URL}
+              target="_blank"
+              rel="noreferrer"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -4,
+                boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)'
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center justify-center space-x-3 bg-gradient-to-r from-primary-600 to-primary-800 hover:from-primary-700 hover:to-primary-900 text-white font-bold py-4 px-10 rounded-full text-lg shadow-lg hover:shadow-2xl transition-all duration-500 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Heart className="w-6 h-6 fill-current relative z-10" />
+              <span className="relative z-10">Contribuer à notre mission</span>
+              <motion.span
+                animate={{ x: [0, 8, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="relative z-10"
+              >
+                →
+              </motion.span>
+            </motion.a>
+          </motion.div>
         </motion.div>
       </div>
     </section>

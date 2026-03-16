@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Globe, Menu, X, Heart } from 'lucide-react'
 
+const DONATION_URL = 'https://www.paypal.me/Lafamillelesaigles?locale.x=fr_FR'
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentLang, setCurrentLang] = useState('FR')
@@ -82,22 +84,26 @@ const Header = () => {
             </button>
 
             {/* Donate Button - Premium CTA with Gold styling */}
-            <Link
-              to="/don"
+            <a
+              href={DONATION_URL}
+              target="_blank"
+              rel="noreferrer"
               className="btn-gold hidden sm:flex space-x-2 group"
             >
               <Heart className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="currentColor" />
               <span>{donateText[currentLang]}</span>
-            </Link>
+            </a>
 
             {/* Mobile Donate Button (Icon Only) */}
-            <Link
-              to="/don"
+            <a
+              href={DONATION_URL}
+              target="_blank"
+              rel="noreferrer"
               className="sm:hidden btn-gold w-12 h-12 !p-0"
               aria-label="Donate"
             >
               <Heart className="w-5 h-5" fill="currentColor" />
-            </Link>
+            </a>
 
             {/* Mobile menu button - Improved animation */}
             <button

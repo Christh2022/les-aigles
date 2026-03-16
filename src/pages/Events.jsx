@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Calendar, MapPin, Clock, Users, Filter } from 'lucide-react'
 import { getEvenements } from '../lib/supabaseClient'
+import { supabase } from '../lib/supabaseClient'
 
 const Events = () => {
   const [evenements, setEvenements] = useState([])
@@ -21,6 +22,21 @@ const Events = () => {
     }
 
     fetchEvenements()
+
+    const channel = supabase
+      .channel('evenements-live')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'evenements' },
+        () => {
+          fetchEvenements()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   const filteredEvents = selectedCountry === 'ALL'
@@ -55,9 +71,9 @@ const Events = () => {
           <div className="max-w-3xl">
             <div className="flex items-center space-x-3 mb-4">
               <Calendar className="w-10 h-10" />
-              <h1 className="text-4xl md:text-5xl font-bold">Événements</h1>
+              <h1 className="text-2xl md:text-3xl font-bold">Événements</h1>
             </div>
-            <p className="text-xl text-gray-100">
+            <p className="text-sm md:text-base text-gray-100">
               Découvrez nos événements en France et au Congo. Rejoignez-nous pour faire la différence !
             </p>
           </div>
@@ -70,12 +86,12 @@ const Events = () => {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center space-x-2">
               <Filter className="w-5 h-5 text-gray-600" />
-              <span className="font-medium text-gray-700">Filtrer par pays:</span>
+              <span className="text-sm font-medium text-gray-700">Filtrer par pays:</span>
             </div>
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setSelectedCountry('ALL')}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
+                className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                   selectedCountry === 'ALL'
                     ? 'bg-primary-600 text-white shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -85,7 +101,7 @@ const Events = () => {
               </button>
               <button
                 onClick={() => setSelectedCountry('France')}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
+                className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                   selectedCountry === 'France'
                     ? 'bg-primary-600 text-white shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -95,7 +111,7 @@ const Events = () => {
               </button>
               <button
                 onClick={() => setSelectedCountry('Congo')}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
+                className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                   selectedCountry === 'Congo'
                     ? 'bg-green-600 text-white shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -131,48 +147,52 @@ const Events = () => {
                   className="card overflow-hidden hover:scale-105 transition-transform duration-300"
                 >
                   {/* Event Image/Banner */}
-                  <div className={`h-48 flex items-center justify-center ${
-                    event.pays === 'France'
-                      ? 'bg-gradient-to-br from-primary-400 to-primary-600'
-                      : 'bg-gradient-to-br from-green-400 to-green-600'
-                  }`}>
-                    <Calendar className="w-20 h-20 text-white opacity-80" />
+                  <div className="h-48 overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
+                    {event.image_url ? (
+                      <img
+                        src={event.image_url}
+                        alt={event.titre}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center">
+                        <Calendar className="w-20 h-20 text-slate-500 opacity-80" />
+                      </div>
+                    )}
                   </div>
 
                   {/* Event Content */}
                   <div className="p-6">
                     {/* Location Badge */}
                     <div className="flex items-center justify-between mb-3">
-                      <span className={`badge ${
-                        event.pays === 'France' ? 'badge-france' : 'badge-congo'
-                      }`}>
+                      <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
                         <MapPin className="w-3 h-3 mr-1" />
                         {event.pays === 'France' ? '🇫🇷' : '🇨🇬'} {event.lieu}, {event.pays}
                       </span>
                       {isUpcoming(event.date_debut) && (
-                        <span className="badge bg-gold-100 text-gold-800">
+                        <span className="inline-flex items-center rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-700">
                           À venir
                         </span>
                       )}
                     </div>
 
                     {/* Event Title */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                    <h3 className="text-base font-bold text-gray-900 mb-3 line-clamp-2">
                       {event.titre}
                     </h3>
 
                     {/* Event Description */}
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    <p className="text-gray-600 text-[11px] mb-4 line-clamp-3">
                       {event.description}
                     </p>
 
                     {/* Event Date & Time */}
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-center space-x-2 text-sm text-gray-700">
+                      <div className="flex items-center space-x-2 text-xs text-gray-700">
                         <Calendar className="w-4 h-4 text-primary-600 flex-shrink-0" />
                         <span>{formatDate(event.date_debut)}</span>
                       </div>
-                      <div className="flex items-center space-x-2 text-sm text-gray-700">
+                      <div className="flex items-center space-x-2 text-xs text-gray-700">
                         <Clock className="w-4 h-4 text-primary-600 flex-shrink-0" />
                         <span>{formatTime(event.date_debut)}</span>
                       </div>
@@ -180,7 +200,7 @@ const Events = () => {
 
                     {/* Action Button */}
                     <button
-                      className={`w-full font-semibold py-2 px-4 rounded-lg transition-colors duration-200 ${
+                      className={`w-full text-xs font-semibold py-2 px-4 rounded-lg transition-colors duration-200 ${
                         isUpcoming(event.date_debut)
                           ? 'bg-primary-600 hover:bg-primary-700 text-white'
                           : 'bg-gray-100 text-gray-600 cursor-not-allowed'
@@ -206,10 +226,10 @@ const Events = () => {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-6">
                 <Calendar className="w-10 h-10 text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-base font-semibold text-gray-900 mb-2">
                 Aucun événement trouvé
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-sm text-gray-600 mb-6">
                 {selectedCountry === 'ALL'
                   ? 'Il n\'y a pas d\'événements disponibles pour le moment.'
                   : `Aucun événement prévu ${selectedCountry === 'France' ? 'en France' : 'au Congo'} pour le moment.`}
@@ -233,28 +253,28 @@ const Events = () => {
           <div className="container-custom">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
-                <div className="text-4xl font-bold text-primary-600 mb-2">
+                <div className="text-3xl font-bold text-primary-600 mb-2">
                   {evenements.length}
                 </div>
-                <div className="text-gray-600">Événements Total</div>
+                <div className="text-sm text-gray-600">Événements Total</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-primary-600 mb-2">
+                <div className="text-3xl font-bold text-primary-600 mb-2">
                   {evenements.filter(e => isUpcoming(e.date_debut)).length}
                 </div>
-                <div className="text-gray-600">À Venir</div>
+                <div className="text-sm text-primary-600">À Venir</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">
+                <div className="text-3xl font-bold text-blue-600 mb-2">
                   {evenements.filter(e => e.pays === 'France').length}
                 </div>
-                <div className="text-gray-600">🇫🇷 France</div>
+                <div className="text-sm text-gray-600">🇫🇷 France</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-green-600 mb-2">
+                <div className="text-3xl font-bold text-green-600 mb-2">
                   {evenements.filter(e => e.pays === 'Congo').length}
                 </div>
-                <div className="text-gray-600">🇨🇬 Congo</div>
+                <div className="text-sm text-gray-600">🇨🇬 Congo</div>
               </div>
             </div>
           </div>
@@ -265,10 +285,10 @@ const Events = () => {
       <section className="py-16 bg-gradient-to-r from-primary-600 to-primary-800 text-white">
         <div className="container-custom text-center">
           <Users className="w-16 h-16 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">
             Organisez votre propre événement
           </h2>
-          <p className="text-xl text-gray-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-sm md:text-base text-gray-100 mb-8 max-w-2xl mx-auto">
             Vous souhaitez organiser un événement de collecte de fonds ou de sensibilisation ?
             Contactez-nous !
           </p>
