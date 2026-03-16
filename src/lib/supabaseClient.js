@@ -1,9 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Configuration Supabase
-// IMPORTANT: Remplacez ces valeurs par vos vraies clés Supabase
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'YOUR_SUPABASE_URL'
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY'
+// Valeurs de secours valides pour eviter un crash de l'app si les variables Netlify sont absentes.
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://example.supabase.co'
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'public-anon-key-placeholder'
+
+if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+  console.warn('Supabase non configure: definissez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY dans Netlify (Site configuration > Environment variables).')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
