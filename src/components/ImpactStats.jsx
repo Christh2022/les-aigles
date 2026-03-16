@@ -81,7 +81,7 @@ const ImpactStats = () => {
       value: 2,
       suffix: '',
       label: 'Pays d\'action',
-      description: 'France & Congo',
+      description: 'France & RDC',
       color: 'blue-4',
       gridClass: 'col-span-1',
     },
@@ -160,8 +160,8 @@ const ImpactStats = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="inline-flex items-center space-x-3 bg-white/50 backdrop-blur-xl border border-white/20 shadow-lg px-6 py-3 rounded-full mb-8 hover:bg-white/60 transition-all"
           >
-            <span className="text-sm">🇨🇬</span>
-            <span className="font-semibold text-xs bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-600">Notre Impact au Congo</span>
+            <span className="text-sm">🇨🇩</span>
+            <span className="font-semibold text-xs bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-600">Notre Impact en RDC</span>
           </motion.div>
           
           <motion.h2

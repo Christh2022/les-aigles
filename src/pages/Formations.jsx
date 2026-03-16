@@ -13,6 +13,33 @@ import {
 } from 'lucide-react'
 import { getFormations } from '../lib/supabaseClient'
 
+const normalizeCountryName = (country = '') => {
+  const normalized = country.trim().toLowerCase()
+
+  if (
+    [
+      'rdc',
+      'r.d.c',
+      'drc',
+      'congo',
+      'congo-kinshasa',
+      'kinshasa',
+      'republique democratique du congo',
+      'republique democratique du congo (rdc)',
+      'république démocratique du congo',
+      'democratic republic of the congo',
+    ].includes(normalized)
+  ) {
+    return 'RDC'
+  }
+
+  if (normalized === 'france') {
+    return 'France'
+  }
+
+  return country
+}
+
 export default function Formations() {
   const [formations, setFormations] = useState([])
   const [loading, setLoading] = useState(true)
@@ -38,7 +65,7 @@ export default function Formations() {
   }, [])
 
   const availableCountries = useMemo(() => {
-    const values = new Set(formations.map((f) => f.pays_concerne).filter(Boolean))
+    const values = new Set(formations.map((f) => normalizeCountryName(f.pays_concerne)).filter(Boolean))
     return ['ALL', ...Array.from(values)]
   }, [formations])
 
@@ -51,7 +78,7 @@ export default function Formations() {
     const term = search.trim().toLowerCase()
 
     return formations.filter((formation) => {
-      const matchCountry = country === 'ALL' || formation.pays_concerne === country
+      const matchCountry = country === 'ALL' || normalizeCountryName(formation.pays_concerne) === country
       const matchLevel = niveau === 'ALL' || formation.niveau === niveau
       const content = `${formation.titre || ''} ${formation.description || ''}`.toLowerCase()
       const matchSearch = !term || content.includes(term)
@@ -84,9 +111,9 @@ export default function Formations() {
 
   const getDisplayCountry = (formation) => {
     if (/alphabétisation et soutien scolaire/i.test(formation?.titre || '')) {
-      return 'France & Congo'
+      return 'France & RDC'
     }
-    return formation?.pays_concerne || 'International'
+    return normalizeCountryName(formation?.pays_concerne) || 'International'
   }
 
   return (

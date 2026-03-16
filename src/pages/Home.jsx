@@ -18,6 +18,38 @@ import ImpactStats from '../components/ImpactStats'
 
 const DONATION_URL = 'https://www.paypal.me/Lafamillelesaigles?locale.x=fr_FR'
 
+const normalizeCountryName = (country = '') => {
+  const normalized = country.trim().toLowerCase()
+
+  if (
+    [
+      'rdc',
+      'r.d.c',
+      'drc',
+      'congo',
+      'congo-kinshasa',
+      'kinshasa',
+      'republique democratique du congo',
+      'republique democratique du congo (rdc)',
+      'republique democratique du congo, rdc',
+      'republique democratique du congo - rdc',
+      'république démocratique du congo',
+      'république démocratique du congo (rdc)',
+      'république démocratique du congo, rdc',
+      'république démocratique du congo - rdc',
+      'democratic republic of the congo',
+    ].includes(normalized)
+  ) {
+    return 'RDC'
+  }
+
+  if (normalized === 'france') {
+    return 'France'
+  }
+
+  return country
+}
+
 const Home = () => {
   const [formations, setFormations] = useState([])
   const [articles, setArticles] = useState([])
@@ -76,7 +108,7 @@ const Home = () => {
 
   const filteredFormations = selectedCountry === 'ALL'
     ? formations
-    : formations.filter(f => f.pays_concerne === selectedCountry)
+    : formations.filter((f) => normalizeCountryName(f.pays_concerne) === selectedCountry)
 
   const isVideoUrl = (url = '') => /\.(mp4|webm|mov)(\?.*)?$/i.test(url)
 
@@ -132,7 +164,7 @@ const Home = () => {
               Nos Deux Pôles d&apos;Action
             </h2>
             <p className="text-subtitle max-w-2xl mx-auto">
-              Une présence stratégique en France et au Congo pour maximiser notre impact social
+              Une présence stratégique en France et en RDC pour maximiser notre impact social
             </p>
           </motion.div>
 
@@ -184,7 +216,7 @@ const Home = () => {
               </ul>
             </motion.div>
 
-            {/* Congo Pole - Bento Card */}
+            {/* RDC Pole - Bento Card */}
             <motion.div
               variants={itemVariants}
               whileHover={{ y: -8 }}
@@ -196,11 +228,11 @@ const Home = () => {
                     <MapPin className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Congo</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 tracking-tight">RDC</h3>
                     <p className="text-sm text-slate-400 font-medium">Opérations - Kinshasa</p>
                   </div>
                 </div>
-                <span className="text-3xl">🇨🇬</span>
+                <span className="text-3xl">🇨🇩</span>
               </div>
 
               <ul className="space-y-4">
@@ -255,7 +287,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex justify-center mb-12 flex-wrap gap-3"
           >
-            {['ALL', 'France', 'Congo'].map((country) => (
+            {['ALL', 'France', 'RDC'].map((country) => (
               <motion.button
                 key={country}
                 whileHover={{ scale: 1.05 }}
@@ -263,13 +295,13 @@ const Home = () => {
                 onClick={() => setSelectedCountry(country)}
                 className={`px-8 py-3 rounded-full font-semibold transition-all duration-500 ${
                   selectedCountry === country
-                    ? country === 'Congo'
+                    ? country === 'RDC'
                       ? 'bg-green-600 text-white shadow-lg shadow-green-500/25'
                       : 'bg-primary-600 text-white shadow-lg shadow-primary-500/25'
                     : 'bg-white text-gray-700 hover:bg-gray-50 shadow-soft'
                 }`}
               >
-                {country === 'ALL' ? 'Tous les pays' : country === 'France' ? '🇫🇷 France' : '🇨🇬 Congo'}
+                {country === 'ALL' ? 'Tous les pays' : country === 'France' ? '🇫🇷 France' : '🇨🇩 RDC'}
               </motion.button>
             ))}
           </motion.div>
@@ -295,36 +327,40 @@ const Home = () => {
               viewport={{ once: true }}
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {filteredFormations.slice(0, 6).map((formation, index) => (
-                <motion.div
-                  key={formation.id}
-                  variants={itemVariants}
-                  whileHover={{ y: -8 }}
-                  className={`bento-card p-8 group ${
-                    index === 0 ? 'md:col-span-2 lg:col-span-1' : ''
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-6">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${
-                      formation.pays_concerne === 'France'
-                        ? 'bg-gradient-to-br from-primary-500 to-primary-700 shadow-primary-500/20'
-                        : 'bg-gradient-to-br from-green-500 to-green-700 shadow-green-500/20'
-                    } group-hover:scale-110 transition-transform duration-500`}>
-                      <GraduationCap className="w-7 h-7 text-white" />
+              {filteredFormations.slice(0, 6).map((formation, index) => {
+                const formationCountry = normalizeCountryName(formation.pays_concerne)
+
+                return (
+                  <motion.div
+                    key={formation.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -8 }}
+                    className={`bento-card p-8 group ${
+                      index === 0 ? 'md:col-span-2 lg:col-span-1' : ''
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-6">
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${
+                        formationCountry === 'France'
+                          ? 'bg-gradient-to-br from-primary-500 to-primary-700 shadow-primary-500/20'
+                          : 'bg-gradient-to-br from-green-500 to-green-700 shadow-green-500/20'
+                      } group-hover:scale-110 transition-transform duration-500`}>
+                        <GraduationCap className="w-7 h-7 text-white" />
+                      </div>
+                      <span className={`badge ${formationCountry === 'France' ? 'badge-france' : 'badge-congo'}`}>
+                        {formationCountry === 'France' ? '🇫🇷' : '🇨🇩'} {formationCountry}
+                      </span>
                     </div>
-                    <span className={`badge ${formation.pays_concerne === 'France' ? 'badge-france' : 'badge-congo'}`}>
-                      {formation.pays_concerne === 'France' ? '🇫🇷' : '🇨🇬'} {formation.pays_concerne}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 tracking-tight">{formation.titre}</h3>
-                  <p className="text-slate-500 mb-6 leading-relaxed line-clamp-2">{formation.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-600 bg-gray-100 px-4 py-2 rounded-full">
-                      Niveau: {formation.niveau}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 tracking-tight">{formation.titre}</h3>
+                    <p className="text-slate-500 mb-6 leading-relaxed line-clamp-2">{formation.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-gray-600 bg-gray-100 px-4 py-2 rounded-full">
+                        Niveau: {formation.niveau}
+                      </span>
+                    </div>
+                  </motion.div>
+                )
+              })}
             </motion.div>
           ) : (
             <div className="text-center py-16">
@@ -470,7 +506,7 @@ const Home = () => {
                           <div className="flex items-center space-x-2 mb-2">
                             <h3 className="font-bold text-gray-900 tracking-tight group-hover:text-primary-600 transition-colors duration-300">{event.titre}</h3>
                             <span className={`badge ${event.pays === 'France' ? 'badge-france' : 'badge-congo'} text-xs`}>
-                              {event.pays === 'France' ? '🇫🇷' : '🇨🇬'} {event.lieu}
+                              {normalizeCountryName(event.pays) === 'France' ? '🇫🇷' : '🇨🇩'} {event.lieu}
                             </span>
                           </div>
                           <p className="text-sm text-slate-500 mb-3 line-clamp-2 leading-relaxed">{event.description}</p>
@@ -509,7 +545,7 @@ const Home = () => {
             Votre don change des vies
           </h2>
           <p className="text-xl md:text-2xl mb-12 max-w-2xl mx-auto leading-relaxed opacity-90">
-            Soutenez nos actions en France et au Congo. Choisissez le projet que vous souhaitez financer.
+            Soutenez nos actions en France et en RDC. Choisissez le projet que vous souhaitez financer.
           </p>
           <a href={DONATION_URL} target="_blank" rel="noreferrer">
             <motion.button

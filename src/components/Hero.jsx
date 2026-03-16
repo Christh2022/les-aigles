@@ -122,7 +122,7 @@ const Hero = () => {
             variants={itemVariants}
             className="text-5xl sm:text-6xl md:text-7xl font-extrabold mb-8 leading-[1.1] tracking-tighter text-gray-900"
           >
-            De la France au Congo,
+            De la France à la RDC,
             <br />
             <span className="relative inline-block">
               <span className="bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700 bg-clip-text text-transparent">
@@ -214,10 +214,10 @@ const Hero = () => {
               
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-                  <span className="text-2xl">🇨🇬</span>
+                  <span className="text-2xl">🇨🇩</span>
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-gray-900">Congo</p>
+                  <p className="text-sm font-semibold text-gray-900">RDC</p>
                   <p className="text-xs text-slate-400">Opérations</p>
                 </div>
               </div>

@@ -3,6 +3,33 @@ import { Calendar, MapPin, Clock, Users, Filter } from 'lucide-react'
 import { getEvenements } from '../lib/supabaseClient'
 import { supabase } from '../lib/supabaseClient'
 
+const normalizeCountryName = (country = '') => {
+  const normalized = country.trim().toLowerCase()
+
+  if (
+    [
+      'rdc',
+      'r.d.c',
+      'drc',
+      'congo',
+      'congo-kinshasa',
+      'kinshasa',
+      'republique democratique du congo',
+      'republique democratique du congo (rdc)',
+      'république démocratique du congo',
+      'democratic republic of the congo',
+    ].includes(normalized)
+  ) {
+    return 'RDC'
+  }
+
+  if (normalized === 'france') {
+    return 'France'
+  }
+
+  return country
+}
+
 const Events = () => {
   const [evenements, setEvenements] = useState([])
   const [loading, setLoading] = useState(true)
@@ -41,7 +68,7 @@ const Events = () => {
 
   const filteredEvents = selectedCountry === 'ALL'
     ? evenements
-    : evenements.filter(e => e.pays === selectedCountry)
+    : evenements.filter((e) => normalizeCountryName(e.pays) === selectedCountry)
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
@@ -74,7 +101,7 @@ const Events = () => {
               <h1 className="text-2xl md:text-3xl font-bold">Événements</h1>
             </div>
             <p className="text-sm md:text-base text-gray-100">
-              Découvrez nos événements en France et au Congo. Rejoignez-nous pour faire la différence !
+              Découvrez nos événements en France et en RDC. Rejoignez-nous pour faire la différence !
             </p>
           </div>
         </div>
@@ -110,14 +137,14 @@ const Events = () => {
                 🇫🇷 France
               </button>
               <button
-                onClick={() => setSelectedCountry('Congo')}
+                onClick={() => setSelectedCountry('RDC')}
                 className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                  selectedCountry === 'Congo'
+                  selectedCountry === 'RDC'
                     ? 'bg-green-600 text-white shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                🇨🇬 Congo
+                🇨🇩 RDC
               </button>
             </div>
           </div>
@@ -167,7 +194,7 @@ const Events = () => {
                     <div className="flex items-center justify-between mb-3">
                       <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
                         <MapPin className="w-3 h-3 mr-1" />
-                        {event.pays === 'France' ? '🇫🇷' : '🇨🇬'} {event.lieu}, {event.pays}
+                        {normalizeCountryName(event.pays) === 'France' ? '🇫🇷' : '🇨🇩'} {event.lieu}, {normalizeCountryName(event.pays)}
                       </span>
                       {isUpcoming(event.date_debut) && (
                         <span className="inline-flex items-center rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-700">
@@ -232,7 +259,7 @@ const Events = () => {
               <p className="text-sm text-gray-600 mb-6">
                 {selectedCountry === 'ALL'
                   ? 'Il n\'y a pas d\'événements disponibles pour le moment.'
-                  : `Aucun événement prévu ${selectedCountry === 'France' ? 'en France' : 'au Congo'} pour le moment.`}
+                  : `Aucun événement prévu ${selectedCountry === 'France' ? 'en France' : 'en RDC'} pour le moment.`}
               </p>
               {selectedCountry !== 'ALL' && (
                 <button
@@ -272,9 +299,9 @@ const Events = () => {
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">
-                  {evenements.filter(e => e.pays === 'Congo').length}
+                  {evenements.filter((e) => normalizeCountryName(e.pays) === 'RDC').length}
                 </div>
-                <div className="text-sm text-gray-600">🇨🇬 Congo</div>
+                <div className="text-sm text-gray-600">🇨🇩 RDC</div>
               </div>
             </div>
           </div>

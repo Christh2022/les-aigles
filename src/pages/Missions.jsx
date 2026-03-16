@@ -35,7 +35,7 @@ const zones = [
     text: 'Coordination institutionnelle, mobilisation citoyenne et accompagnement social des publics en difficulte.',
   },
   {
-    title: 'Congo',
+    title: 'RDC',
     subtitle: 'Kinshasa et actions terrain',
     text: 'Mise en oeuvre de projets solidaires, accompagnement communautaire et soutien aux initiatives jeunesse.',
   },
@@ -155,7 +155,7 @@ export default function Missions() {
             </h1>
             <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
               La Famille Les Aigles agit pour l education, la formation, l insertion et l aide aux plus demunis,
-              avec une approche concrete et humaine entre la France et le Congo.
+              avec une approche concrete et humaine entre la France et la RDC.
             </p>
           </motion.div>
         </div>

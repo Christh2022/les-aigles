@@ -15,7 +15,7 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-bold text-lg mb-4">La Famille Les Aigles</h3>
             <p className="text-sm mb-4">
-              Association d&apos;aide sociale internationale, œuvrant de la France au Congo et bientôt dans le monde entier.
+              Association d&apos;aide sociale internationale, œuvrant de la France à la RDC et bientôt dans le monde entier.
             </p>
             <div className="flex space-x-4">
               <a
@@ -90,7 +90,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start space-x-2">
                 <MapPin className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                <span>Opérations: Kinshasa, Congo</span>
+                <span>Opérations: Kinshasa, RDC</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Mail className="w-5 h-5 text-primary-400 flex-shrink-0" />

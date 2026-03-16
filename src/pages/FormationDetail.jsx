@@ -10,11 +10,11 @@ const PHONE_RULES = {
     pattern: '^(?:0|\\+33|33)?[1-9](?:[\\s.-]?\\d{2}){4}$',
     hint: 'Format France: 06 12 34 56 78',
   },
-  Congo: {
-    dialCode: '+242',
-    placeholder: 'Ex: 06 123 45 67',
-    pattern: '^(?:\\+242|242|0)?[0-9](?:[\\s.-]?\\d){7,8}$',
-    hint: 'Format Congo: 06 123 45 67',
+  RDC: {
+    dialCode: '+243',
+    placeholder: 'Ex: 0999 000 000',
+    pattern: '^(?:\\+243|243|0)?[0-9](?:[\\s.-]?\\d){8,9}$',
+    hint: 'Format RDC: 0999 000 000',
   },
   International: {
     dialCode: '+',
@@ -22,6 +22,33 @@ const PHONE_RULES = {
     pattern: '^\\+?[0-9][0-9\\s.-]{6,}$',
     hint: 'Format international: +Indicatif ...',
   },
+}
+
+const normalizeCountryName = (country = '') => {
+  const normalized = country.trim().toLowerCase()
+
+  if (
+    [
+      'rdc',
+      'r.d.c',
+      'drc',
+      'congo',
+      'congo-kinshasa',
+      'kinshasa',
+      'republique democratique du congo',
+      'republique democratique du congo (rdc)',
+      'république démocratique du congo',
+      'democratic republic of the congo',
+    ].includes(normalized)
+  ) {
+    return 'RDC'
+  }
+
+  if (normalized === 'france') {
+    return 'France'
+  }
+
+  return 'International'
 }
 
 export default function FormationDetail() {
@@ -63,13 +90,13 @@ export default function FormationDetail() {
 
   const getDisplayCountry = (item) => {
     if (/alphabétisation et soutien scolaire/i.test(item?.titre || '')) {
-      return 'France & Congo'
+      return 'France & RDC'
     }
-    return item?.pays_concerne || 'International'
+    return normalizeCountryName(item?.pays_concerne)
   }
 
   useEffect(() => {
-    const mappedCountry = formation?.pays_concerne === 'Congo' ? 'Congo' : formation?.pays_concerne === 'France' ? 'France' : 'International'
+    const mappedCountry = normalizeCountryName(formation?.pays_concerne)
     if (mappedCountry) {
       setFormData((prev) => ({ ...prev, pays: mappedCountry }))
     }
@@ -234,7 +261,7 @@ export default function FormationDetail() {
                         className="w-full rounded-xl border border-primary-100 bg-white px-3 py-2 text-sm outline-none focus:border-primary-300"
                       >
                         <option value="France">France</option>
-                        <option value="Congo">Congo</option>
+                        <option value="RDC">RDC</option>
                         <option value="International">Autre pays</option>
                       </select>
                     </label>
